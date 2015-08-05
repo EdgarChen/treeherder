@@ -141,7 +141,7 @@ treeherder.factory('ThResultSetStore', [
             });
         };
         var registerJobsPoller = function(){
-            $interval(pollJobs, jobPollInterval);
+//            $interval(pollJobs, jobPollInterval);
         };
 
         var mapResultSetJobs = function(repoName, jobList){
