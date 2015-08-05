@@ -105,7 +105,7 @@ treeherder.value("thPlatformOrder", {
     "horizon-linux64": 74,
     "horizon-osx": 75,
     "horizon-win64": 76,
-    "other": 99,
+    "other": 99
 });
 
 treeherder.value("thOptionOrder", {
@@ -114,7 +114,7 @@ treeherder.value("thOptionOrder", {
     "asan": 2,
     "tsan": 3,
     "debug": 4,
-    "cc": 5,
+    "cc": 5
 });
 
 treeherder.value("thFailureResults", ["testfailed", "busted", "exception"]);
@@ -156,11 +156,11 @@ treeherder.value("thJobNavSelectors",
     {
         ALL_JOBS: {
             name: "jobs",
-            selector: ".job-btn"
+            selector: ".job-btn, .selected-job, .selected-count"
         },
         UNCLASSIFIED_FAILURES: {
             name: "unclassified failures",
-            selector: ".selected-job, " +
+            selector: ".selected-job, .selected-count, " +
                       ".job-btn.btn-red, " +
                       ".job-btn.btn-orange, " +
                       ".job-btn.btn-purple"

@@ -23,6 +23,7 @@ treeherder.directive('thCloneJobs', [
         // CSS classes
         var btnCls = 'btn-xs';
         var selectedBtnCls = 'selected-job';
+        var selectedCountCls = 'selected-count';
         var largeBtnCls = 'btn-lg-xform';
 
         var col5Cls = 'col-xs-5';
@@ -30,6 +31,8 @@ treeherder.directive('thCloneJobs', [
         var col12Cls = 'col-xs-12';
         var jobListNoPadCls = 'job-list-nopad';
         var jobListPadCls = 'job-list-pad';
+
+        var viewContentSel = ".th-view-content";
 
         var failResults = ["testfailed", "busted", "exception"];
 
@@ -91,9 +94,9 @@ treeherder.directive('thCloneJobs', [
                 // The .selected-job can be invisible, for instance, when filtered to
                 // unclassified failures only, and you then classify the selected job.
                 // It's still selected, but no longer visible.
-                jobs = $(".th-view-content").find(jobNavSelector.selector).filter(":visible, .selected-job");
+                jobs = $(viewContentSel).find(jobNavSelector.selector).filter(":visible, .selected-job, .selected-count");
                 if (jobs.length) {
-                    var selIdx = jobs.index(jobs.filter(".selected-job"));
+                    var selIdx = jobs.index(jobs.filter(".selected-job, .selected-count").first());
                     var idx = getIndex(selIdx, jobs);
 
                     el = $(jobs[idx]);
@@ -162,6 +165,16 @@ treeherder.directive('thCloneJobs', [
         var broadcastJobChangedTimeout = null;
         var clickJobCb = function(ev, el, job, job_selection_type){
             setSelectJobStyles(el);
+
+            // if a job was previously selected that is now inside a count,
+            // then the count will have the ``.selected-count`` class.  Since
+            // we are now selecting a job, we need to remove that class from the
+            // count.
+            var selectedCount = $(viewContentSel).find("."+selectedCountCls);
+            if (selectedCount.length) {
+                selectedCount.removeClass(selectedCountCls);
+            }
+
             // delay switching right away, in case the user is switching rapidly
             // between jobs
             if (broadcastJobChangedTimeout) {
@@ -280,6 +293,7 @@ treeherder.directive('thCloneJobs', [
             var countList = platformGroup.find(".group-count-list");
             jobList.empty();
             countList.empty();
+            countList.removeClass(selectedCountCls);
 
             for (l = 0; l < jgObj.jobs.length; l++) {
 
@@ -301,6 +315,11 @@ treeherder.directive('thCloneJobs', [
                         // render the job itself, not a count
                         addJobBtnToArray(job, lastJobSelected, jobBtnArray);
                     } else {
+                        if( !_.isEmpty(lastJobSelected.job) &&
+                            (lastJobSelected.job.id === job.id)){
+                            countList.addClass(selectedCountCls);
+                        }
+
                         ct = _.get(_.get(stateCounts, countInfo.btnClass, countInfo),
                                    "count", 0);
                         countInfo.count = ct+1;
@@ -755,6 +774,7 @@ treeherder.directive('thCloneJobs', [
             $rootScope.$on(
                 thEvents.groupStateChanged, function(ev, filterData){
                     _.bind(renderGroups, scope, element, true)();
+                    scrollToElement($(viewContentSel).find(".selected-job, .selected-count"));
                 });
 
             $rootScope.$on(
