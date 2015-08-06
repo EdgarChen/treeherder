@@ -162,6 +162,8 @@ treeherder.directive('thCloneJobs', [
             var selectedCount = $(viewContentSel).find("."+selectedCountCls);
             if (selectedCount.length) {
                 selectedCount.removeClass(selectedCountCls);
+                selectedCount.removeClass(largeBtnCls);
+
             }
         };
 
@@ -287,7 +289,9 @@ treeherder.directive('thCloneJobs', [
             var countList = platformGroup.find(".group-count-list");
             jobList.empty();
             countList.empty();
+
             countList.removeClass(selectedCountCls);
+            countList.removeClass(largeBtnCls);
 
             for (l = 0; l < jgObj.jobs.length; l++) {
 
@@ -312,6 +316,7 @@ treeherder.directive('thCloneJobs', [
                         if( !_.isEmpty(lastJobSelected.job) &&
                             (lastJobSelected.job.id === job.id)){
                             countList.addClass(selectedCountCls);
+                            countList.addClass(largeBtnCls);
                         }
 
                         ct = _.get(_.get(stateCounts, countInfo.btnClass, countInfo),
