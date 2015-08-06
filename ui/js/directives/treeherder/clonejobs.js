@@ -136,14 +136,8 @@ treeherder.directive('thCloneJobs', [
 
         var setSelectJobStyles = function(el){
 
-            var lastJobSelected = ThResultSetStore.getSelectedJob(
-                $rootScope.repoName);
-
-            if(!_.isEmpty(lastJobSelected.el)){
-                lastJobSelected.el.removeClass(selectedBtnCls);
-                lastJobSelected.el.removeClass(largeBtnCls);
-                lastJobSelected.el.addClass(btnCls);
-            }
+            // clear the styles from the previously selected job, if any.
+            clearSelectJobStyles();
 
             el.removeClass(btnCls);
             el.addClass(largeBtnCls);
@@ -160,11 +154,6 @@ treeherder.directive('thCloneJobs', [
                 lastJobSelected.el.removeClass(largeBtnCls);
                 lastJobSelected.el.addClass(btnCls);
             }
-        };
-
-        var broadcastJobChangedTimeout = null;
-        var clickJobCb = function(ev, el, job, job_selection_type){
-            setSelectJobStyles(el);
 
             // if a job was previously selected that is now inside a count,
             // then the count will have the ``.selected-count`` class.  Since
@@ -174,6 +163,11 @@ treeherder.directive('thCloneJobs', [
             if (selectedCount.length) {
                 selectedCount.removeClass(selectedCountCls);
             }
+        };
+
+        var broadcastJobChangedTimeout = null;
+        var clickJobCb = function(ev, el, job, job_selection_type){
+            setSelectJobStyles(el);
 
             // delay switching right away, in case the user is switching rapidly
             // between jobs
