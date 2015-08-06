@@ -163,7 +163,6 @@ treeherder.directive('thCloneJobs', [
             if (selectedCount.length) {
                 selectedCount.removeClass(selectedCountCls);
                 selectedCount.removeClass(largeBtnCls);
-
             }
         };
 
@@ -290,9 +289,6 @@ treeherder.directive('thCloneJobs', [
             jobList.empty();
             countList.empty();
 
-            countList.removeClass(selectedCountCls);
-            countList.removeClass(largeBtnCls);
-
             for (l = 0; l < jgObj.jobs.length; l++) {
 
                 job = jgObj.jobs[l];
@@ -313,10 +309,13 @@ treeherder.directive('thCloneJobs', [
                         // render the job itself, not a count
                         addJobBtnToArray(job, lastJobSelected, jobBtnArray);
                     } else {
+                        _.extend(countInfo, stateCounts[countInfo.btnClass]);
                         if( !_.isEmpty(lastJobSelected.job) &&
                             (lastJobSelected.job.id === job.id)){
-                            countList.addClass(selectedCountCls);
-                            countList.addClass(largeBtnCls);
+                            // these clases are applied in the interpolator
+                            // to designate this count as having one of its
+                            // jobs selected.
+                            countInfo.selectedClasses = selectedCountCls + " " + largeBtnCls;
                         }
 
                         ct = _.get(_.get(stateCounts, countInfo.btnClass, countInfo),
